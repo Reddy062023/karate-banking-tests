@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/transactions/transfer"
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "transactionId": "TXN-98765",
+      "status": "PENDING",
+      "amount": 250.00,
+      "currency": "USD",
+      "fromAccountId": "ACC-10042",
+      "toAccountId": "ACC-20099",
+      "createdAt": "2024-04-13T10:00:00Z"
+    }
+  }
+}

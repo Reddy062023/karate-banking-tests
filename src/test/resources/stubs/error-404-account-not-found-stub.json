@@ -1,0 +1,16 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "PATCH",
+    "url": "/accounts/ACC-DOES-NOT-EXIST"
+  },
+  "response": {
+    "status": 404,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "errorCode": "ACCOUNT_NOT_FOUND",
+      "message": "Account not found",
+      "timestamp": "2024-04-13T10:00:00Z"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/loans/eligibility.*"
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "eligible": true,
+      "maxAmount": 25000,
+      "interestRate": 6.75
+    }
+  }
+}

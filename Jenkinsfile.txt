@@ -1,0 +1,67 @@
+pipeline {
+  agent any
+  tools {
+    maven 'Maven-3.9'
+    jdk 'JDK-17'
+  }
+  parameters {
+    choice(name: 'ENV',
+      choices: ['dev', 'staging', 'uat'],
+      description: 'Target environment')
+    string(name: 'TAGS',
+      defaultValue: '@regression',
+      description: 'Karate tags')
+    string(name: 'THREADS',
+      defaultValue: '5',
+      description: 'Parallel threads')
+  }
+  stages {
+    stage('Checkout') {
+      steps { checkout scm }
+    }
+    stage('Start Infrastructure') {
+      steps {
+        sh 'docker compose up -d'
+        sh 'sleep 15'
+      }
+    }
+    stage('Load Stubs') {
+      steps {
+        sh '''
+          for f in src/test/resources/stubs/*.json; do
+            curl -s -X POST http://localhost:8090/__admin/mappings \
+              -H "Content-Type: application/json" -d @$f
+          done
+        '''
+      }
+    }
+    stage('Smoke Tests') {
+      steps {
+        sh "mvn test -Dkarate.env=${params.ENV} -Dkarate.options='--tags @smoke'"
+      }
+    }
+    stage('Regression Tests') {
+      steps {
+        sh "mvn test -Dkarate.env=${params.ENV} -Dkarate.options='--tags ${params.TAGS}'"
+      }
+    }
+  }
+  post {
+    always {
+      publishHTML([
+        reportDir: 'target/karate-reports',
+        reportFiles: 'karate-summary.html',
+        reportName: 'Karate Report'
+      ])
+      junit 'target/surefire-reports/*.xml'
+      sh 'docker compose down'
+    }
+    failure {
+      emailext(
+        subject: "KARATE FAILED - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+        body: "Build: ${env.BUILD_URL}",
+        to: 'qa-team@company.com'
+      )
+    }
+  }
+}

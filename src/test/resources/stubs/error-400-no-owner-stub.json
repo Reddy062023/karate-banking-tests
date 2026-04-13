@@ -1,0 +1,16 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "POST",
+    "url": "/accounts/validate"
+  },
+  "response": {
+    "status": 400,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "errorCode": "MISSING_FIELDS",
+      "message": "Owner is required",
+      "timestamp": "2024-04-13T10:00:00Z"
+    }
+  }
+}

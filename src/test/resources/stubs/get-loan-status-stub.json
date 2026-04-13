@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/loans/.*"
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "loanId": "LOAN-55001",
+      "status": "APPROVED",
+      "amount": 10000,
+      "termMonths": 24,
+      "interestRate": 6.75
+    }
+  }
+}

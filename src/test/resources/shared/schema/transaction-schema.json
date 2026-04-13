@@ -1,0 +1,9 @@
+{
+  "transactionId": "#notnull",
+  "status": "#string",
+  "amount": "#number",
+  "currency": "#string",
+  "fromAccountId": "#string",
+  "toAccountId": "#string",
+  "createdAt": "#notnull"
+}

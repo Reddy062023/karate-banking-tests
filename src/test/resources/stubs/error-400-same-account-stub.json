@@ -1,0 +1,21 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "POST",
+    "url": "/transactions/transfer",
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$[?(@.fromAccountId == @.toAccountId)]"
+      }
+    ]
+  },
+  "response": {
+    "status": 400,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "errorCode": "SAME_ACCOUNT_TRANSFER",
+      "message": "Cannot transfer to same account",
+      "timestamp": "2024-04-13T10:00:00Z"
+    }
+  }
+}

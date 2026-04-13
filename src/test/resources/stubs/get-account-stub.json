@@ -1,0 +1,19 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/accounts/.*"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "accountId": "ACC-001",
+      "accountHolder": "John Doe",
+      "balance": 5000.00,
+      "currency": "USD",
+      "status": "ACTIVE"
+    }
+  }
+}

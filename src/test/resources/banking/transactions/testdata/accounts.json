@@ -1,0 +1,5 @@
+[
+  { "accountId": "ACC-001", "expectedStatus": "ACTIVE", "expectedCurrency": "USD" },
+  { "accountId": "ACC-001", "expectedStatus": "ACTIVE", "expectedCurrency": "USD" },
+  { "accountId": "ACC-001", "expectedStatus": "ACTIVE", "expectedCurrency": "USD" }
+]

@@ -1,0 +1,24 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/accounts"
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "accountId": "ACC-NEW-001",
+      "accountType": "SAVINGS",
+      "balance": 0.00,
+      "currency": "USD",
+      "status": "ACTIVE",
+      "owner": {
+        "name": "Jane Doe",
+        "email": "jane.doe@example.com"
+      },
+      "createdAt": "2024-04-13T10:00:00Z"
+    }
+  }
+}

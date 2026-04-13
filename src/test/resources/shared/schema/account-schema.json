@@ -1,0 +1,12 @@
+{
+  "accountId": "#string",
+  "accountType": "#string",
+  "balance": "#number",
+  "currency": "#string",
+  "status": "#string",
+  "owner": {
+    "name": "#string",
+    "email": "#string"
+  },
+  "createdAt": "#notnull"
+}

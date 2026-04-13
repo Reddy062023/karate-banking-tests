@@ -1,0 +1,4 @@
+fromAccountId,toAccountId,amount,currency,expectedStatus,expectedError
+ACC-10042,ACC-20099,100.00,USD,201,
+ACC-10042,ACC-20099,50.50,USD,201,
+ACC-10042,ACC-20099,0.01,USD,201,
