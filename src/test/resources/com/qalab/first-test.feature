@@ -1,3 +1,4 @@
+@smoke
 Feature: First Karate Test
 
   Scenario: Verify WireMock is running
