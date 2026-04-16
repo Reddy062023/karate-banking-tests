@@ -3,9 +3,15 @@ name: Karate API & E2E Tests
 on:
   push:
     branches: [main, develop]
+    paths-ignore:
+      - 'quickmart-backend/**'
   pull_request:
     branches: [main, develop]
+    paths-ignore:
+      - 'quickmart-backend/**'
   schedule:
+    - cron: '0 6 * * 1-5'
+  workflow_dispatch:  schedule:
     - cron: '0 6 * * 1-5'
   workflow_dispatch:
     inputs:
