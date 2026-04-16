@@ -1,0 +1,83 @@
+name: QuickMart Backend Tests
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'quickmart-backend/**'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  checks: write
+  pull-requests: write
+  pages: write
+
+jobs:
+  quickmart-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    services:
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - "27018:27017"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+
+      - name: Start QuickMart Backend
+        working-directory: quickmart-backend
+        run: |
+          nohup mvn spring-boot:run &
+          echo "Waiting for Spring Boot to start..."
+          sleep 25
+          curl --retry 10 --retry-delay 3 --retry-connrefused http://localhost:8085/api/cash/store/STORE-001 || true
+
+      - name: Run Karate Tests
+        working-directory: quickmart-backend
+        run: mvn test -Dtest=QuickMartTestRunner
+
+      - name: Upload Karate HTML Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: karate-report-${{ github.run_number }}
+          path: quickmart-backend/target/karate-reports/
+
+      - name: Upload Allure Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results-${{ github.run_number }}
+          path: quickmart-backend/target/allure-results/
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        with:
+          allure_results: quickmart-backend/target/allure-results
+          allure_report: quickmart-backend/target/allure-report
+          allure_history: allure-history
+          keep_reports: 5
+
+      - name: Publish Allure Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: quickmart-backend/target/allure-report
