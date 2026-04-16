@@ -12,6 +12,8 @@ public class QuickMartTestRunner {
         Results results = Runner
                 .path("src/test/resources/quickmart")
                 .outputHtmlReport(true)
+                .outputJunitXml(true)
+                .outputCucumberJson(true)
                 .parallel(1);
         assertEquals(0, results.getFailCount(),
                 results.getErrorMessages());

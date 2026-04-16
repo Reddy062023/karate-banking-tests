@@ -3,17 +3,12 @@ name: QuickMart Backend Tests
 on:
   push:
     branches: [main, develop]
-    paths:
-      - 'quickmart-backend/**'
-  pull_request:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: write
   checks: write
   pull-requests: write
-  pages: write
 
 jobs:
   quickmart-tests:
@@ -45,7 +40,8 @@ jobs:
           nohup mvn spring-boot:run &
           echo "Waiting for Spring Boot to start..."
           sleep 25
-          curl --retry 10 --retry-delay 3 --retry-connrefused http://localhost:8085/api/cash/store/STORE-001 || true
+          curl --retry 10 --retry-delay 3 --retry-connrefused \
+            http://localhost:8085/api/cash/store/STORE-001 || true
 
       - name: Run Karate Tests
         working-directory: quickmart-backend
@@ -55,29 +51,20 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: karate-report-${{ github.run_number }}
+          name: karate-html-report-${{ github.run_number }}
           path: quickmart-backend/target/karate-reports/
-
-      - name: Upload Allure Results
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: allure-results-${{ github.run_number }}
-          path: quickmart-backend/target/allure-results/
 
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@master
         if: always()
         with:
-          allure_results: quickmart-backend/target/allure-results
+          allure_results: quickmart-backend/target/karate-reports
           allure_report: quickmart-backend/target/allure-report
-          allure_history: allure-history
           keep_reports: 5
 
-      - name: Publish Allure Report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v4
         if: always()
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: quickmart-backend/target/allure-report
+          name: allure-report-${{ github.run_number }}
+          path: quickmart-backend/target/allure-report/
