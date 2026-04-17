@@ -1,22 +1,24 @@
-Feature: Data-driven transfer tests from CSV file
+Feature: Data-Driven Transfer Tests from CSV
 
   Background:
-    * url wireMockUrl
+    * url baseUrl
 
   @regression @data-driven
-  Scenario Outline: Transfer scenario: <expectedStatus> for amount <amount>
+  Scenario Outline: Transfer <expectedStatus> for amount <amount>
     Given path '/transactions/transfer'
     And request
     """
     {
       "fromAccountId": "<fromAccountId>",
-      "toAccountId": "<toAccountId>",
-      "amount": <amount>,
-      "currency": "<currency>"
+      "toAccountId":   "<toAccountId>",
+      "amount":        <amount>,
+      "currency":      "<currency>"
     }
     """
     When method POST
     Then status <expectedStatus>
+    * if ('<expectedError>' != '') karate.match(response.errorCode, '<expectedError>')
+    * print '>>> Transfer result:', responseStatus, 'amount:', <amount>
 
     Examples:
     | read('testdata/transfers.csv') |
