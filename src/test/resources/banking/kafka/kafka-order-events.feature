@@ -7,7 +7,7 @@ Feature: Kafka Order Event Validation
     * def BROKER = 'localhost:9092'
     * def KafkaTestHelper = Java.type('com.qalab.helpers.KafkaTestHelper')
 
-  @smoke @kafka
+  @regression @kafka
   Scenario: Send HTTP call and validate Kafka event produced
     Given path '/transactions/transfer'
     And request
