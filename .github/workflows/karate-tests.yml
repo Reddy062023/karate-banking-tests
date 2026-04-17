@@ -16,18 +16,9 @@ on:
   schedule:
     - cron: '0 6 * * 1-5'
   workflow_dispatch:
-    inputs:
-      environment:
-        description: Target environment
-        default: ci
-        type: choice
-        options: [ci, staging]
-      tags:
-        description: Karate tags
-        default: '@regression'
 
 permissions:
-  contents: read
+  contents: write
   checks: write
   pull-requests: write
 
@@ -93,6 +84,31 @@ jobs:
         with:
           name: karate-report-${{ github.run_number }}
           path: target/karate-reports/
+
+      - name: Get Allure history
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Build Allure Report
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        with:
+          allure_results: target/karate-reports
+          allure_history: allure-history
+          gh_pages: gh-pages
+          keep_reports: 10
+
+      - name: Deploy Allure Report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
