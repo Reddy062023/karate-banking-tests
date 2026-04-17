@@ -1,6 +1,7 @@
 Feature: Oracle DB Validation
   # Section 4.4 - Kafka Data Validation Queries
   # In Instore: QA validates KOLOG transactions in Oracle
+  # @ignore added - Oracle XE only available locally, not in CI
 
   Background:
     * def OracleHelper = Java.type('com.qalab.oracle.OracleHelper')
@@ -8,7 +9,7 @@ Feature: Oracle DB Validation
     * def DB_USER = 'qalab'
     * def DB_PASS = 'qalab123'
 
-  @regression @oracle
+  @regression @oracle @ignore
   Scenario: Validate sample data loaded correctly
     * def custCount = OracleHelper.scalar(DB_URL, DB_USER, DB_PASS, 'SELECT COUNT(*) FROM customers')
     * def ordCount  = OracleHelper.scalar(DB_URL, DB_USER, DB_PASS, 'SELECT COUNT(*) FROM orders')
@@ -27,7 +28,7 @@ Feature: Oracle DB Validation
     And assert payCount  == 2
     * print '>>> All table counts validated!'
 
-  @regression @oracle
+  @regression @oracle @ignore
   Scenario: Validate DELIVERED order exists in Oracle
     * def exists = OracleHelper.orderExists(DB_URL, DB_USER, DB_PASS, 'ORD-1001')
     * def status = OracleHelper.getOrderStatus(DB_URL, DB_USER, DB_PASS, 'ORD-1001')
@@ -35,7 +36,7 @@ Feature: Oracle DB Validation
     And match status == 'DELIVERED'
     * print '>>> ORD-1001 exists in Oracle with status:', status
 
-  @regression @oracle
+  @regression @oracle @ignore
   Scenario: Find orders not published to Kafka
     * def unpublished = OracleHelper.findUnpublishedOrders(DB_URL, DB_USER, DB_PASS)
     * print '>>> Unpublished orders:', unpublished
@@ -45,7 +46,7 @@ Feature: Oracle DB Validation
     And match unpublished[0].status   == 'CREATED'
     * print '>>> Found', cnt, 'order(s) not published to Kafka!'
 
-  @regression @oracle
+  @regression @oracle @ignore
   Scenario: Validate no duplicate orders - idempotency check
     * def duplicates = OracleHelper.findDuplicateOrders(DB_URL, DB_USER, DB_PASS)
     * print '>>> Duplicate orders:', duplicates
@@ -53,7 +54,7 @@ Feature: Oracle DB Validation
     And assert cnt == 0
     * print '>>> No duplicate orders - idempotency working!'
 
-  @regression @oracle
+  @regression @oracle @ignore
   Scenario: Validate order item totals match order total
     * def mismatches = OracleHelper.findAmountMismatches(DB_URL, DB_USER, DB_PASS)
     * print '>>> Amount mismatches:', mismatches
@@ -61,7 +62,7 @@ Feature: Oracle DB Validation
     And assert cnt == 0
     * print '>>> All order amounts match item totals!'
 
-  @regression @oracle
+  @regression @oracle @ignore
   Scenario: Kafka partition load balance check
     * def sql = 'SELECT kafka_partition, COUNT(*) AS message_count FROM orders WHERE kafka_offset IS NOT NULL GROUP BY kafka_partition ORDER BY kafka_partition'
     * def partitions = OracleHelper.query(DB_URL, DB_USER, DB_PASS, sql)
