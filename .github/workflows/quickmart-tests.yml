@@ -61,19 +61,11 @@ jobs:
           ref: gh-pages
           path: gh-pages
 
-      - name: Check allure results
-        if: always()
-        run: |
-          echo "=== karate-reports ==="
-          ls -la quickmart-backend/target/karate-reports/ || echo "Not found"
-          echo "=== allure-results ==="
-          ls -la quickmart-backend/target/allure-results/ || echo "Not found"
-
       - name: Build Allure Report
         if: always()
         uses: simple-elf/allure-report-action@master
         with:
-          allure_results: quickmart-backend/target/karate-reports
+          allure_results: quickmart-backend/target/allure-results
           allure_history: allure-history
           gh_pages: gh-pages
           keep_reports: 10
