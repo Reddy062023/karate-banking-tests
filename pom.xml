@@ -12,6 +12,8 @@
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <karate.version>1.4.1</karate.version>
+    <allure.version>2.29.1</allure.version>
+    <aspectj.version>1.9.20</aspectj.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -58,17 +60,33 @@
       <artifactId>jackson-databind</artifactId>
       <version>2.15.2</version>
     </dependency>
-<!-- SLF4J Logger to fix warning -->
-<dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-simple</artifactId>
-    <version>1.7.36</version>
-    <scope>test</scope>
-  </dependency>
+
+    <!-- SLF4J Logger -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>1.7.36</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Allure Karate -->
+    <dependency>
+      <groupId>io.qameta.allure</groupId>
+      <artifactId>allure-karate</artifactId>
+      <version>${allure.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- AspectJ for Allure -->
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+      <version>${aspectj.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
-    <!-- CRITICAL: include .feature files in test resources -->
     <testResources>
       <testResource>
         <directory>src/test/resources</directory>
@@ -81,9 +99,15 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>3.1.2</version>
         <configuration>
-          <argLine>-Dfile.encoding=UTF-8</argLine>
+          <argLine>
+            -Dfile.encoding=UTF-8
+            -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+          </argLine>
           <systemPropertyVariables>
             <karate.env>${karate.env}</karate.env>
+            <allure.results.directory>
+              ${project.build.directory}/allure-results
+            </allure.results.directory>
           </systemPropertyVariables>
         </configuration>
       </plugin>
@@ -97,5 +121,4 @@
       <url>https://packages.confluent.io/maven/</url>
     </repository>
   </repositories>
-
 </project>

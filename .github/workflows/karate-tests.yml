@@ -97,7 +97,7 @@ jobs:
         uses: simple-elf/allure-report-action@master
         if: always()
         with:
-          allure_results: target/karate-reports
+          allure_results: target/allure-results
           allure_history: allure-history
           gh_pages: gh-pages
           keep_reports: 10
