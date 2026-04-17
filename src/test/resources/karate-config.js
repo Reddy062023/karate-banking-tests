@@ -15,11 +15,12 @@ function fn() {
   if (env == 'staging') {
     karate.configure('ssl', true);
     config.baseUrl = 'http://staging-api:8090';
-    config.wireMockUrl = 'http://localhost:8090';
+    
   }
 
   if (env == 'ci') {
     config.baseUrl = 'http://ci-api:8090';
+    config.wireMockUrl = 'http://localhost:8090';
   }
 
   karate.configure('connectTimeout', 5000);
