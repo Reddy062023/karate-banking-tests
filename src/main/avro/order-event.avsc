@@ -1,0 +1,31 @@
+{
+  "type": "record",
+  "name": "OrderEvent",
+  "namespace": "com.qalab.avro",
+  "doc": "Order event schema for Kafka - Section 2.8",
+  "fields": [
+    { "name": "orderId",   "type": "string" },
+    { "name": "customerId","type": "string" },
+    { "name": "amount",    "type": "double" },
+    { "name": "currency",  "type": "string", "default": "USD" },
+    { "name": "status",    "type": "string" },
+    { "name": "eventType", "type": "string" },
+    { "name": "timestamp", "type": "long" },
+    {
+      "name": "items",
+      "type": {
+        "type": "array",
+        "items": {
+          "type": "record",
+          "name": "OrderItem",
+          "fields": [
+            { "name": "productId", "type": "string" },
+            { "name": "qty",       "type": "int" },
+            { "name": "price",     "type": "double" }
+          ]
+        }
+      },
+      "default": []
+    }
+  ]
+}
