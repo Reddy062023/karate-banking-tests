@@ -32,7 +32,12 @@ Feature: Kafka Order Event Validation
     * eval producer.close()
     * print '>>> Kafka event sent, orderId:', orderId
 
-    * def msg = KafkaTestHelper.poll(BROKER, TOPIC, orderId, 15)
+    # Wait for Kafka to propagate message in CI
+    * def sleep = function(ms){ java.lang.Thread.sleep(ms) }
+    * sleep(3000)
+
+    # Step 3: Validate Kafka message
+    * def msg = KafkaTestHelper.poll(BROKER, TOPIC, orderId, 30)
     * print '>>> Kafka message received:', msg
 
     And match msg.orderId    == orderId
