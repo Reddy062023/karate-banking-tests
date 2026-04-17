@@ -1,7 +1,6 @@
 function fn() {
   var env = karate.env || 'local';
   karate.log('Environment:', env);
-
   var config = {
     env: env,
     baseUrl: 'http://localhost:8090',
@@ -11,20 +10,16 @@ function fn() {
     mongoDatabase: 'bankingdb',
     wireMockUrl: 'http://localhost:8090'
   };
-
   if (env == 'staging') {
     karate.configure('ssl', true);
     config.baseUrl = 'http://staging-api:8090';
-    
+    config.wireMockUrl = 'http://staging-api:8090';
   }
-
   if (env == 'ci') {
-    config.baseUrl = 'http://ci-api:8090';
+    config.baseUrl = 'http://localhost:8090';
     config.wireMockUrl = 'http://localhost:8090';
   }
-
   karate.configure('connectTimeout', 5000);
   karate.configure('readTimeout', 10000);
-
   return config;
 }
