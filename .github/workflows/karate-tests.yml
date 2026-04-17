@@ -31,20 +31,33 @@ jobs:
       wiremock:
         image: wiremock/wiremock:latest
         ports: ['8090:8080']
+
       zookeeper:
         image: confluentinc/cp-zookeeper:7.4.0
+        ports:
+          - '2181:2181'
         env:
           ZOOKEEPER_CLIENT_PORT: 2181
+          ZOOKEEPER_TICK_TIME: 2000
+
       kafka:
         image: confluentinc/cp-kafka:7.4.0
-        ports: ['9092:9092']
+        ports:
+          - '9092:9092'
         env:
           KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
           KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+          KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: '1'
+          KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: '1'
+          KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: '1'
           KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+          KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: '0'
+          KAFKA_LOG_RETENTION_MS: '60000'
+
       mongodb:
         image: mongo:6.0
-        ports: ['27017:27017']
+        ports:
+          - '27017:27017'
 
     steps:
       - uses: actions/checkout@v4
@@ -58,17 +71,29 @@ jobs:
         with:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
 
       - name: Wait for services ready
         run: |
-          timeout 60 bash -c 'until nc -z localhost 9092; do sleep 2; done'
-          timeout 30 bash -c 'until curl -s http://localhost:8090/__admin/; do sleep 2; done'
+          echo "Waiting for WireMock..."
+          timeout 60 bash -c 'until curl -s http://localhost:8090/__admin/; do sleep 2; done'
+          echo "WireMock ready!"
+
+          echo "Waiting for Kafka..."
+          timeout 90 bash -c 'until nc -z localhost 9092; do sleep 2; done'
+          echo "Kafka ready!"
+          sleep 5
+
+          echo "Waiting for MongoDB..."
+          timeout 30 bash -c 'until nc -z localhost 27017; do sleep 2; done'
+          echo "MongoDB ready!"
 
       - name: Load WireMock stubs
         run: |
           for f in src/test/resources/stubs/*.json; do
             curl -s -X POST http://localhost:8090/__admin/mappings \
               -H "Content-Type: application/json" -d @"$f"
+            echo "Loaded stub: $f"
           done
 
       - name: Run Smoke Tests
