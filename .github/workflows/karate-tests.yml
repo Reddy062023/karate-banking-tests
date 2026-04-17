@@ -78,12 +78,10 @@ jobs:
           echo "Waiting for WireMock..."
           timeout 60 bash -c 'until curl -s http://localhost:8090/__admin/; do sleep 2; done'
           echo "WireMock ready!"
-
           echo "Waiting for Kafka..."
           timeout 90 bash -c 'until nc -z localhost 9092; do sleep 2; done'
           echo "Kafka ready!"
           sleep 5
-
           echo "Waiting for MongoDB..."
           timeout 30 bash -c 'until nc -z localhost 27017; do sleep 2; done'
           echo "MongoDB ready!"
@@ -96,11 +94,7 @@ jobs:
             echo "Loaded stub: $f"
           done
 
-      - name: Run Smoke Tests
-        run: mvn test -Dkarate.env=ci -Dkarate.options="--tags @smoke"
-
-      - name: Run Regression Tests
-        if: success()
+      - name: Run All Tests
         run: mvn test -Dkarate.env=ci
 
       - name: Upload Karate Report
