@@ -93,7 +93,8 @@ jobs:
               -H "Content-Type: application/json" -d @"$f"
             echo "Loaded stub: $f"
           done
-       - name: Seed MongoDB test data
+
+      - name: Seed MongoDB test data
         run: |
           echo "Seeding MongoDB with test data..."
           docker run --rm --network host mongo:6.0 mongosh \
