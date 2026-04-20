@@ -93,6 +93,13 @@ jobs:
               -H "Content-Type: application/json" -d @"$f"
             echo "Loaded stub: $f"
           done
+       - name: Seed MongoDB test data
+        run: |
+          echo "Seeding MongoDB with test data..."
+          docker run --rm --network host mongo:6.0 mongosh \
+            "mongodb://localhost:27017/banking_events" \
+            --eval "db.order_events.insertMany([{orderId:'ORD-1001',customerId:'CUST-01',eventType:'ORDER_CREATED',status:'CREATED',totalAmount:1149.98,currency:'USD',items:[{productId:'PROD-001',name:'Laptop',qty:1,price:999.99},{productId:'PROD-002',name:'Headphones',qty:1,price:149.99}],customer:{name:'Alice Johnson',email:'alice@bank.com',tier:'GOLD'},payment:{method:'CREDIT_CARD',last4:'4242',gateway:'Stripe'},kafka:{topic:'order-events',partition:0,offset:1024},schemaVersion:1},{orderId:'ORD-1001',customerId:'CUST-01',eventType:'ORDER_PAID',status:'PAID',totalAmount:1149.98,payment:{method:'CREDIT_CARD',gatewayRef:'STRIPE-AAA'},kafka:{topic:'payment-events',partition:0,offset:501},schemaVersion:1},{orderId:'ORD-1002',customerId:'CUST-02',eventType:'ORDER_CREATED',status:'CREATED',totalAmount:299.99,items:[{productId:'PROD-003',name:'Desk Chair',qty:1,price:299.99}],customer:{name:'Bob Smith',email:'bob@bank.com',tier:'STANDARD'},kafka:{topic:'order-events',partition:1,offset:1025},schemaVersion:1},{orderId:'ORD-FAIL-001',customerId:'CUST-99',eventType:'ORDER_PAYMENT_FAILED',status:'PAYMENT_FAILED',totalAmount:500.00,kafka:{topic:'order-events-dlq',partition:0,offset:1},errorDetail:{code:'CARD_DECLINED',message:'Insufficient funds'},schemaVersion:1}])"
+          echo "MongoDB seeded!"
 
       - name: Run All Tests
         run: mvn test -Dkarate.env=ci
