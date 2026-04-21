@@ -631,3 +631,9 @@ mvn spring-boot:run
 **WireMock stubs lost on container restart.** Run `load-stubs.bat` every time WireMock restarts.
 
 **QuickMart IngressService reads by transactionId.** Uses `AUTO_OFFSET_RESET=earliest` and polls multiple times searching for the specific transaction ID — prevents reading stale messages from previous test runs.
+
+---
+Built by Japendra
+Portfolio: https://Reddy062023.github.io
+GitHub: https://github.com/Reddy062023
+Contact: japendras06@gmail.com
