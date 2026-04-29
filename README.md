@@ -1,4 +1,4 @@
-# QA Automation Lab — Karate + Kafka + Oracle + MongoDB
+﻿# QA Automation Lab — Karate + Kafka + Oracle + MongoDB
 
 [![Karate Tests](https://github.com/Reddy062023/karate-banking-tests/actions/workflows/karate-tests.yml/badge.svg)](https://github.com/Reddy062023/karate-banking-tests/actions/workflows/karate-tests.yml)
 [![Allure Report](https://img.shields.io/badge/Allure-Report-green)](https://reddy062023.github.io/karate-banking-tests/)
@@ -467,7 +467,7 @@ GitHub: https://github.com/Reddy062023
 
 A companion Spring Boot project used to practice testing real REST APIs.
 
-**Location:** `C:\Users\Geetu\quickmart-backend\quickmart-backend`
+**Location:** `./quickmart-backend`
 **Port:** 8085
 **MongoDB:** localhost:27018 (quickmart-mongodb Docker container)
 
@@ -475,11 +475,11 @@ A companion Spring Boot project used to practice testing real REST APIs.
 
 ```bash
 # 1. Start QuickMart containers
-cd C:\Users\Geetu\quickmart\quickmart
+cd ./quickmart
 docker compose up -d
 
 # 2. Start Spring Boot app
-cd C:\Users\Geetu\quickmart-backend\quickmart-backend
+cd ./quickmart-backend
 mvn spring-boot:run
 ```
 
@@ -541,7 +541,7 @@ Invoke-RestMethod -Method POST -Uri "http://localhost:8085/api/business-day/crea
 
 ## QuickMart Flow Project (Original Kafka Pipeline)
 
-**Location:** `C:\Users\Geetu\quickmart\quickmart`
+**Location:** `./quickmart`
 **MongoDB:** localhost:27018
 
 A Kafka → RabbitMQ → MongoDB event-driven pipeline:
@@ -563,7 +563,7 @@ Transaction types: `CASH_SALE` (status: PROCESSED) and `VOID` (status: VOIDED).
 ### Start and Run
 
 ```bash
-cd C:\Users\Geetu\quickmart\quickmart
+cd ./quickmart
 docker compose up -d    # starts quickmart-mongodb + rabbitmq
 mvn test                # runs 3 integration tests, BUILD SUCCESS
 ```
@@ -593,18 +593,18 @@ mvn test                # runs 3 integration tests, BUILD SUCCESS
 
 ```bash
 # Banking tests
-cd C:\Users\Geetu\karate-banking-tests
+cd .
 docker compose up -d
 load-stubs.bat
 mvn test
 
 # QuickMart flow tests
-cd C:\Users\Geetu\quickmart\quickmart
+cd ./quickmart
 docker compose up -d
 mvn test
 
 # QuickMart backend (optional)
-cd C:\Users\Geetu\quickmart-backend\quickmart-backend
+cd ./quickmart-backend
 mvn spring-boot:run
 ```
 
